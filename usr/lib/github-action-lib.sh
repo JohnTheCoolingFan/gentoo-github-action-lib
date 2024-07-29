@@ -145,7 +145,7 @@ function checkout_overlay_master()
     cd "${overlay_dir}" || die "Unable to change to overlay directory (${overlay_dir})"
     git init
     git remote add github "git@github.com:${1}.git"
-    git pull github master
+    git pull github "${git_branch:-master}"
 }
 
 # Check out or create the specified branch
@@ -166,7 +166,7 @@ function checkout_or_create_overlay_branch()
 function rebase_overlay_branch()
 {
     infomsg "Attempting to rebase against master"
-    git rebase master || true
+    git rebase ${git_branch:-master} || true
 }
 
 # Add all files in the current working directory to git
@@ -287,7 +287,7 @@ function create_live_ebuild()
         unexpand --first-only -t 4 "${GITHUB_WORKSPACE}/.gentoo/${ebuild_file_live}" > "${ebuild_file_live}"
         if [[ "${INPUT_PACKAGE_ONLY}" != "true" ]]; then
             replace_in_file "GITHUB_REPOSITORY" "${GITHUB_REPOSITORY}" "${ebuild_file_live}"
-            replace_in_file "GITHUB_REF" "master" "${ebuild_file_live}"
+            replace_in_file "GITHUB_REF" "${git_branch:-master}" "${ebuild_file_live}"
         fi
 
         # Fix up the KEYWORDS variable in the new ebuild - 9999 live version.
@@ -326,7 +326,7 @@ function create_new_ebuild()
     unexpand --first-only -t 4 "${GITHUB_WORKSPACE}/.gentoo/${ebuild_path}" > "${ebuild_file_new}"
     if [[ "${INPUT_PACKAGE_ONLY}" != "true" ]]; then
         replace_in_file "GITHUB_REPOSITORY" "${GITHUB_REPOSITORY}" "${ebuild_file_new}"
-        replace_in_file "GITHUB_REF" "master" "${ebuild_file_new}"
+        replace_in_file "GITHUB_REF" "${git_branch:-master}" "${ebuild_file_new}"
     fi
 
     # Build / rebuild manifests
