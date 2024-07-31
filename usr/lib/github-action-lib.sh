@@ -101,10 +101,10 @@ function get_ebuild_name()
 function get_ebuild_ver()
 {
     local semver_regex ebuild_ver
-    semver_regex="^(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))*$"
+    semver_regex="^v?(0|[1-9][0-9]*)(\.(0|[1-9][0-9]*))*$"
     ebuild_ver="${1##*/}"
     [[ ${ebuild_ver} =~ ${semver_regex} ]] || die "Unexpected release version - ${ebuild_ver}"
-    echo "${ebuild_ver}"
+    echo "${ebuild_ver#v}"
 }
 
 # Configure the ssh-agent by adding github.com to known_hosts and
